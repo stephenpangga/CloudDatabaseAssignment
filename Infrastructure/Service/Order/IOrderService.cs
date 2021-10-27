@@ -20,5 +20,7 @@ namespace Infrastructure.Service
 
         //need one for update shipping date.
 
+        Task<Order> UpdateShippingDate(string orderId);
+
     }
 }

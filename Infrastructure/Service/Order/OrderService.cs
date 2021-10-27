@@ -28,7 +28,7 @@ namespace Infrastructure.Service
             order.ProductId = orderDTO.ProductId;
             order.UserId = orderDTO.UserId;
             order.OrderDate = DateTime.Now;
-            //order.ShippingDate = DateTime.Now;
+            order.ShippingDate = DateTime.Now;
             order.PartitionKey = orderDTO.ProductId.ToString();
 
             return await _orderWriteRepository.AddAsync(order);
@@ -55,5 +55,13 @@ namespace Infrastructure.Service
             Order updateOrder = new Order();
             return await _orderWriteRepository.Update(updateOrder);
         }
+
+        public async Task<Order> UpdateShippingDate(string orderId)
+        {
+            Order orderTochangeShippingTime = await GetOrderByIdAsync(orderId);
+            orderTochangeShippingTime.ShippingDate = DateTime.Today.AddDays(5);
+            return await _orderWriteRepository.Update(orderTochangeShippingTime);
+        }
+
     }
 }

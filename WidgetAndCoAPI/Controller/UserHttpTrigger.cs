@@ -53,7 +53,7 @@ namespace WidgetAndCoAPI
 
 
         [Function("UpdateUser")]
-        public async Task<HttpResponseData> UpdateUser([HttpTrigger(AuthorizationLevel.Anonymous, "Update", Route = "users/{UserId}")] HttpRequestData req, string userId, FunctionContext executionContext)
+        public async Task<HttpResponseData> UpdateUser([HttpTrigger(AuthorizationLevel.Anonymous, "Put", Route = "users/{UserId}")] HttpRequestData req, string userId, FunctionContext executionContext)
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             UserDTO userDTO = JsonConvert.DeserializeObject<UserDTO>(requestBody);

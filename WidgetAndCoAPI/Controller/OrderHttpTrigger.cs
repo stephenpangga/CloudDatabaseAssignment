@@ -53,9 +53,13 @@ namespace WidgetAndCoAPI
 
 
         [Function("UpdateOrder")]
-        public async Task<HttpResponseData> UpdateOrder([HttpTrigger(AuthorizationLevel.Anonymous, "Update", Route = "orders/{OrderId}")] HttpRequestData req, string orderId, FunctionContext executionContext)
+        public async Task<HttpResponseData> UpdateOrder([HttpTrigger(AuthorizationLevel.Anonymous, "Put", Route = "orders/{OrderId}")] HttpRequestData req, string orderId, FunctionContext executionContext)
         {
-            return null;
+            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            OrderDTO orderDTO = JsonConvert.DeserializeObject<OrderDTO>(requestBody);
+            HttpResponseData response = req.CreateResponse(HttpStatusCode.OK);
+            await response.WriteAsJsonAsync(_orderService.UpdateOrderAsync(orderDTO));
+            return response;
         }
 
         [Function("DeleteOrder")]
@@ -65,6 +69,14 @@ namespace WidgetAndCoAPI
             await _orderService.DeleteOrderAsync(orderId);
             response.StatusCode = HttpStatusCode.Accepted;
             await response.WriteStringAsync("Project deleted successfully!", Encoding.UTF8);
+            return response;
+        }
+
+        [Function("UpdateShippingTime")]
+        public async Task<HttpResponseData> UpdateOrdersShippingDate([HttpTrigger(AuthorizationLevel.Anonymous, "Put", Route = "orders/updateshipping/{OrderId}")] HttpRequestData req, string orderId, FunctionContext executionContext)
+        {
+            HttpResponseData response = req.CreateResponse(HttpStatusCode.OK);
+            await response.WriteAsJsonAsync(_orderService.UpdateShippingDate(orderId));
             return response;
         }
     }

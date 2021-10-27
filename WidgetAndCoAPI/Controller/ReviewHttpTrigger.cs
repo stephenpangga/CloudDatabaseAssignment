@@ -54,7 +54,7 @@ namespace WidgetAndCoAPI
 
 
         [Function("UpdateReview")]
-        public async Task<HttpResponseData> UpdateReview([HttpTrigger(AuthorizationLevel.Anonymous, "Update", Route = "reviews/{reviewId}")] HttpRequestData req, string reviewId, FunctionContext executionContext)
+        public async Task<HttpResponseData> UpdateReview([HttpTrigger(AuthorizationLevel.Anonymous, "Put", Route = "reviews/{reviewId}")] HttpRequestData req, string reviewId, FunctionContext executionContext)
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             ReviewDTO reviewDTO = JsonConvert.DeserializeObject<ReviewDTO>(requestBody);

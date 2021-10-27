@@ -54,7 +54,7 @@ namespace WidgetAndCoAPI
 
 
         [Function("UpdateProduct")]
-        public async Task<HttpResponseData> UpdateProduct([HttpTrigger(AuthorizationLevel.Anonymous, "Update", Route = "products/{ProductId}")] HttpRequestData req, string productId, FunctionContext executionContext)
+        public async Task<HttpResponseData> UpdateProduct([HttpTrigger(AuthorizationLevel.Anonymous, "Put", Route = "products/{ProductId}")] HttpRequestData req, string productId, FunctionContext executionContext)
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             ProductDTO productDTO = JsonConvert.DeserializeObject<ProductDTO>(requestBody);
