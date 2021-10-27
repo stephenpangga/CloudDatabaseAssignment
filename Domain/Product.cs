@@ -13,5 +13,7 @@ namespace Domain
         public string ProductName { get; set; } 
 
         public double Price { get; set; }
+
+        public string PartitionKey { get; set; }
     }
 }

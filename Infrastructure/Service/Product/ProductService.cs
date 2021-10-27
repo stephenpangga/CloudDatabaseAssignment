@@ -27,6 +27,7 @@ namespace Infrastructure.Service
             product.ProductId = Guid.NewGuid();
             product.ProductName = productDTO.ProductName;
             product.Price = productDTO.Price;
+            product.PartitionKey = productDTO.ProductName; //maybe change this to producttype
 
             return await _productWriteRepository.AddAsync(product);
         }
