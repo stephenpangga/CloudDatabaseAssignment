@@ -1,6 +1,7 @@
 ﻿using Domain;
 using Domain.DTO;
 using Infrastructure.Repository;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,24 +31,27 @@ namespace Infrastructure.Service
             return await _productWriteRepository.AddAsync(product);
         }
 
-        public Task DeleteUserAsync(string ProductId)
+        public async Task DeleteUserAsync(string productId)
         {
-            throw new NotImplementedException();
+            Product product = await GetProductByIdAsync(productId);
+            await _productWriteRepository.Delete(product);
         }
 
-        public Task<IEnumerable<Product>> GetAllProductsAsync()
+        public async Task<IEnumerable<Product>> GetAllProductsAsync()
         {
-            throw new NotImplementedException();
+            return await _productReadRepository.GetAll().ToListAsync();
         }
 
-        public Task<Product> GetProductByIdAsync(string ProductId)
+        public async Task<Product> GetProductByIdAsync(string productId)
         {
-            throw new NotImplementedException();
+            Guid id = Guid.Parse(productId);
+            return await _productReadRepository.GetAll().FirstOrDefaultAsync(p => p.ProductId == id);
         }
 
-        public Task<Product> UpdateProductAsync(ProductDTO productDTO)
+        public async Task<Product> UpdateProductAsync(ProductDTO productDTO)
         {
-            throw new NotImplementedException();
+            Product updateProduct = new Product();
+            return await _productWriteRepository.Update(updateProduct);
         }
     }
 }
