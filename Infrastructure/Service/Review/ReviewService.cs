@@ -27,6 +27,7 @@ namespace Infrastructure.Service
             review.ReviewId = Guid.NewGuid();
             review.ProductId = reviewDTO.ProductId;
             review.Comments = reviewDTO.Comments;
+            review.PartitionKey = reviewDTO.ProductId.ToString();
             return await _reviewWriteRepository.AddAsync(review);
         }
 

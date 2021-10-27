@@ -43,6 +43,7 @@ namespace WidgetAndCoAPI
             Services.AddScoped<IOrderService, OrderService>();
             Services.AddScoped<IUserService, UserService>();
             Services.AddScoped<IProductService, ProductService>();
+            Services.AddScoped<IReviewService, ReviewService>();
         }
 
     }

@@ -51,6 +51,16 @@ namespace Infrastructure
                 .UseETagConcurrency()
                 .HasPartitionKey(p => p.PartitionKey);
 
+            //review
+            modelBuilder.Entity<Review>()
+                .ToContainer(nameof(Review))
+                .HasKey(r => r.ReviewId);
+
+            modelBuilder.Entity<Review>()
+                .HasNoDiscriminator()
+                .UseETagConcurrency()
+                .HasPartitionKey(r => r.PartitionKey);
+
 
         }
     }

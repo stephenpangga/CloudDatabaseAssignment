@@ -14,6 +14,8 @@ namespace Domain
 
         public string Comments { get; set; }
 
+        public string PartitionKey { get; set; }
+
         public Review()
         {
 
