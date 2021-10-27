@@ -1,0 +1,10 @@
+{
+    "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+    "CosmosDb:Account": "https://widgetandcostore.documents.azure.com:443/",
+    "CosmosDb:Key": "f13ROF7tkhpX5MgtRlVHb7PkxfO1ooe5pjj8aJGLedvBtrOP2Dt58m4exMhUsSwyDOLV5jBv2jpx5DJgHkANgg==",
+    "CosmosDb:DatabaseName": "WidgetAndCoDB"
+  }
+}
