@@ -30,6 +30,7 @@ namespace Infrastructure
             user.LastName = userDTO.LastName;
             user.Address = userDTO.Address;
             user.Email = userDTO.Email;
+            user.PartitionKey = userDTO.FirstName;
 
             return await _userWriteRepository.AddAsync(user);
         }
