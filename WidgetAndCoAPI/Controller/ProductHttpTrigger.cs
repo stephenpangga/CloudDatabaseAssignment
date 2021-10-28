@@ -59,7 +59,7 @@ namespace WidgetAndCoAPI
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             ProductDTO productDTO = JsonConvert.DeserializeObject<ProductDTO>(requestBody);
             HttpResponseData response = req.CreateResponse(HttpStatusCode.OK);
-            await response.WriteAsJsonAsync(_productService.UpdateProductAsync(productDTO));
+            await response.WriteAsJsonAsync(_productService.UpdateProductAsync(productDTO,productId));
             return response;
         }
 

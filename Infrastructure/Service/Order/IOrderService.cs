@@ -14,11 +14,9 @@ namespace Infrastructure.Service
         Task<Order> GetOrderByIdAsync(string orderId);
         Task<Order> AddOrderAsync(OrderDTO orderDTO);
 
-        Task<Order> UpdateOrderAsync(OrderDTO orderDTO);
+        Task<Order> UpdateOrderAsync(OrderDTO orderDTO, string orderId);
 
         Task DeleteOrderAsync(string orderId);
-
-        //need one for update shipping date.
 
         Task<Order> UpdateShippingDate(string orderId);
 

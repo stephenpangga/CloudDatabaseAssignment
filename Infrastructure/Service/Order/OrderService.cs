@@ -28,15 +28,22 @@ namespace Infrastructure.Service
             order.ProductId = orderDTO.ProductId;
             order.UserId = orderDTO.UserId;
             order.OrderDate = DateTime.Now;
-            order.ShippingDate = DateTime.Now;
+            order.ShippingDate = null; // set to null, but can be updated when updateShipping endpoint is called.
             order.PartitionKey = orderDTO.ProductId.ToString();
 
             return await _orderWriteRepository.AddAsync(order);
         }
         public async Task DeleteOrderAsync(string orderId)
         {
-            Order order = await GetOrderByIdAsync(orderId);
-            await _orderWriteRepository.Delete(order);
+            if (!string.IsNullOrEmpty(orderId))
+            {
+                Order order = await GetOrderByIdAsync(orderId);
+                await _orderWriteRepository.Delete(order);
+            }
+            else
+            {
+                throw new Exception("Order Id provided does not exist");
+            }
         }
 
         public async Task<IEnumerable<Order>> GetAllOrdersAsync()
@@ -46,13 +53,30 @@ namespace Infrastructure.Service
 
         public async Task<Order> GetOrderByIdAsync(string orderId)
         {
-            Guid id = Guid.Parse(orderId);
-            return await _orderReadRepository.GetAll().FirstOrDefaultAsync(o => o.OrderId == id);
+            try
+            {
+                Guid id = Guid.Parse(orderId);
+                var order = await _orderReadRepository.GetAll().FirstOrDefaultAsync(o => o.OrderId == id);
+                
+                if (order == null)
+                {
+                    throw new Exception("The order you are looking for does not exist");
+                }
+                return order;
+            }
+            catch
+            {
+                throw new Exception("Please provide a proper ID");
+            }
         }
 
-        public async Task<Order> UpdateOrderAsync(OrderDTO orderDTO)
+        public async Task<Order> UpdateOrderAsync(OrderDTO orderDTO, string orderId)
         {
-            Order updateOrder = new Order();
+            Order updateOrder = await GetOrderByIdAsync(orderId);
+            updateOrder.ProductId = orderDTO.ProductId;
+            updateOrder.UserId = orderDTO.UserId;
+            updateOrder.OrderDate = orderDTO.OrderDate;
+            updateOrder.ShippingDate = orderDTO.ShippingDate;
             return await _orderWriteRepository.Update(updateOrder);
         }
 

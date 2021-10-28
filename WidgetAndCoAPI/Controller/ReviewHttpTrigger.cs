@@ -59,7 +59,7 @@ namespace WidgetAndCoAPI
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             ReviewDTO reviewDTO = JsonConvert.DeserializeObject<ReviewDTO>(requestBody);
             HttpResponseData response = req.CreateResponse(HttpStatusCode.OK);
-            await response.WriteAsJsonAsync(_reviewService.UpdateReviewAsync(reviewDTO));
+            await response.WriteAsJsonAsync(_reviewService.UpdateReviewAsync(reviewDTO, reviewId));
             return response;
         }
 

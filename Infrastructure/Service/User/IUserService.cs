@@ -16,7 +16,7 @@ namespace Infrastructure
 
         Task<User> AddUserAsync(UserDTO userDTO);
 
-        Task<User> UpdateUserAsync(UserDTO userDTO);
+        Task<User> UpdateUserAsync(UserDTO userDTO, string userId);
 
         Task DeleteUserAsync(string UserId);
     }

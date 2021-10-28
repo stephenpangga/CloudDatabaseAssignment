@@ -14,6 +14,10 @@ namespace Domain
 
         public double Price { get; set; }
 
+        public string ProductSpecification { get; set; }
+
+        public string ImageURL { get; set; }
+
         public string PartitionKey { get; set; }
     }
 }

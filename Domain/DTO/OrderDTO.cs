@@ -12,9 +12,9 @@ namespace Domain.DTO
 
         public Guid UserId { get; set; }
 
-        //public DateTime OrderDate { get; set; }
+        public DateTime OrderDate { get; set; }
 
-        //public DateTime ShippingDate { get; set; }
+        public DateTime? ShippingDate { get; set; }
 
         public OrderDTO()
         {

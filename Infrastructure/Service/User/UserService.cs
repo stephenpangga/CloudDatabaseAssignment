@@ -21,7 +21,6 @@ namespace Infrastructure
             _userWriteRepository = userWriteRepository;
         }
 
-
         public async Task<User> AddUserAsync(UserDTO userDTO)
         {
             User user = new User();
@@ -37,8 +36,15 @@ namespace Infrastructure
 
         public async Task DeleteUserAsync(string userId)
         {
-            User User = await GetUserByIdAsync(userId);
-            await _userWriteRepository.Delete(User);
+            if (!string.IsNullOrEmpty(userId))
+            {
+                User User = await GetUserByIdAsync(userId);
+                await _userWriteRepository.Delete(User);
+            }
+            else
+            {
+                throw new Exception("Review Id provided does not exist");
+            }            
         }
 
         public async Task<IEnumerable<User>> GetAllUsersAsync()
@@ -48,14 +54,34 @@ namespace Infrastructure
 
         public async Task<User> GetUserByIdAsync(string UserId)
         {
-            Guid id = Guid.Parse(UserId);
-            return await _userReadRepository.GetAll().FirstOrDefaultAsync(u=>u.UserId == id);
+            try
+            {
+                Guid id = Guid.Parse(UserId);
+                var User =  await _userReadRepository.GetAll().FirstOrDefaultAsync(u => u.UserId == id);
+                
+                if(User == null)
+                {
+                    throw new Exception("The user you are looking for does not exist");
+                }
+
+                return User;
+            }
+            catch
+            {
+                throw new Exception("Please provide a proper GUID for users");
+            }
         }
 
-        public async Task<User> UpdateUserAsync(UserDTO userDTO)
+        public async Task<User> UpdateUserAsync(UserDTO userDTO, string userId)
         {
-            User updateUser = new User();
-            return await _userWriteRepository.Update(updateUser);
+            User userInfo = await GetUserByIdAsync(userId);
+            //update user info.
+            userInfo.FirstName = userDTO.FirstName;
+            userInfo.LastName = userDTO.LastName;
+            userInfo.Address = userDTO.Address;
+            userInfo.Email = userDTO.Email;
+
+            return await _userWriteRepository.Update(userInfo);
         }
     }
 }

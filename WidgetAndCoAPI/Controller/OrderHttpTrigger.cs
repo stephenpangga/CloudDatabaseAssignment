@@ -58,7 +58,7 @@ namespace WidgetAndCoAPI
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             OrderDTO orderDTO = JsonConvert.DeserializeObject<OrderDTO>(requestBody);
             HttpResponseData response = req.CreateResponse(HttpStatusCode.OK);
-            await response.WriteAsJsonAsync(_orderService.UpdateOrderAsync(orderDTO));
+            await response.WriteAsJsonAsync(_orderService.UpdateOrderAsync(orderDTO, orderId));
             return response;
         }
 
@@ -72,6 +72,9 @@ namespace WidgetAndCoAPI
             return response;
         }
 
+        //this is only called when the product is going to be shipped
+        //example when the barcode of the order is scanned the order id will be sent
+        //and shipping time will be update to the current time when the endpoint is called
         [Function("UpdateShippingTime")]
         public async Task<HttpResponseData> UpdateOrdersShippingDate([HttpTrigger(AuthorizationLevel.Anonymous, "Put", Route = "orders/updateshipping/{OrderId}")] HttpRequestData req, string orderId, FunctionContext executionContext)
         {

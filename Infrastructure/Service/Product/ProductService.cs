@@ -27,6 +27,8 @@ namespace Infrastructure.Service
             product.ProductId = Guid.NewGuid();
             product.ProductName = productDTO.ProductName;
             product.Price = productDTO.Price;
+            product.ProductSpecification = productDTO.ProductSpecification;
+            product.ImageURL = productDTO.ImageURL;
             product.PartitionKey = productDTO.ProductName; //maybe change this to producttype
 
             return await _productWriteRepository.AddAsync(product);
@@ -34,8 +36,16 @@ namespace Infrastructure.Service
 
         public async Task DeleteUserAsync(string productId)
         {
-            Product product = await GetProductByIdAsync(productId);
-            await _productWriteRepository.Delete(product);
+            if (!string.IsNullOrEmpty(productId))
+            {
+                Product product = await GetProductByIdAsync(productId);
+                await _productWriteRepository.Delete(product);
+            }
+            else
+            {
+                throw new Exception("Product Id provided does not exist");
+            }
+            
         }
 
         public async Task<IEnumerable<Product>> GetAllProductsAsync()
@@ -45,14 +55,37 @@ namespace Infrastructure.Service
 
         public async Task<Product> GetProductByIdAsync(string productId)
         {
-            Guid id = Guid.Parse(productId);
-            return await _productReadRepository.GetAll().FirstOrDefaultAsync(p => p.ProductId == id);
+            try
+            {
+                Guid id = Guid.Parse(productId);
+                var product =  await _productReadRepository.GetAll().FirstOrDefaultAsync(p => p.ProductId == id);
+
+                if (product == null)
+                {
+                    throw new Exception("The product you are looking for does not exist");
+                }
+                return product;
+            }
+            catch
+            {
+                throw new Exception("Please provide a proper ID");
+            }
+            
         }
 
-        public async Task<Product> UpdateProductAsync(ProductDTO productDTO)
+        public async Task<Product> UpdateProductAsync(ProductDTO productDTO, string productId)
         {
-            Product updateProduct = new Product();
+            Product updateProduct = await GetProductByIdAsync(productId);
+            updateProduct.ProductName = productDTO.ProductName;
+            updateProduct.Price = productDTO.Price;
+            updateProduct.ProductSpecification = productDTO.ProductSpecification;
+            updateProduct.ImageURL = productDTO.ImageURL;
             return await _productWriteRepository.Update(updateProduct);
         }
+
+        /*public uploadProductImage(string ProductId)
+        {
+
+        }*/
     }
 }

@@ -33,8 +33,15 @@ namespace Infrastructure.Service
 
         public async Task DeleteReviewAsync(string reviewId)
         {
-            Review review = await GetReviewByIdAsync(reviewId);
-            await _reviewWriteRepository.Delete(review);
+            if (!string.IsNullOrEmpty(reviewId))
+            {
+                Review review = await GetReviewByIdAsync(reviewId);
+                await _reviewWriteRepository.Delete(review);
+            }
+            else
+            {
+                throw new Exception("Review Id provided does not exist");
+            }
         }
 
         public async Task<IEnumerable<Review>> GetAllReviewsAsync()
@@ -44,13 +51,26 @@ namespace Infrastructure.Service
 
         public async Task<Review> GetReviewByIdAsync(string reviewId)
         {
-            Guid id = Guid.Parse(reviewId);
-            return await _reviewReadRepository.GetAll().FirstOrDefaultAsync(r => r.ReviewId == id);
+            try
+            {
+                Guid id = Guid.Parse(reviewId);
+                var review = await _reviewReadRepository.GetAll().FirstOrDefaultAsync(r => r.ReviewId == id);
+
+                if(review == null)
+                {
+                    throw new Exception("The review you are looking for does not exist");
+                }
+                return review;
+            }
+            catch
+            {
+                throw new Exception("Please provide a proper ID");
+            }
         }
 
-        public async Task<Review> UpdateReviewAsync(ReviewDTO reviewDTO)
+        public async Task<Review> UpdateReviewAsync(ReviewDTO reviewDTO, string reviewId)
         {
-            Review updateReview = new Review();
+            Review updateReview = await GetReviewByIdAsync(reviewId);
             updateReview.Comments = reviewDTO.Comments;
             return await _reviewWriteRepository.Update(updateReview);
         }

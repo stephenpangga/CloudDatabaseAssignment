@@ -58,7 +58,7 @@ namespace WidgetAndCoAPI
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             UserDTO userDTO = JsonConvert.DeserializeObject<UserDTO>(requestBody);
             HttpResponseData response = req.CreateResponse(HttpStatusCode.OK);
-            await response.WriteAsJsonAsync(await _userService.UpdateUserAsync(userDTO));
+            await response.WriteAsJsonAsync(await _userService.UpdateUserAsync(userDTO, userId));
             return response;
         }
 

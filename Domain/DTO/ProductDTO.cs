@@ -10,6 +10,11 @@ namespace Domain.DTO
     {
         public string ProductName { get; set; }
         public double Price { get; set; }
+
+        public string ProductSpecification { get; set; }
+
+        public string ImageURL { get; set; }
+
         public ProductDTO()
         {
 

@@ -16,7 +16,7 @@ namespace Infrastructure.Service
 
         Task<Product> AddProductAsync(ProductDTO productDTO);
 
-        Task<Product> UpdateProductAsync(ProductDTO productDTO);
+        Task<Product> UpdateProductAsync(ProductDTO productDTO, string productId);
 
         Task DeleteUserAsync(string ProductId);
     }

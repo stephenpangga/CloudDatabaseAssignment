@@ -16,7 +16,7 @@ namespace Infrastructure.Service
 
         Task<Review> AddReviewAsync(ReviewDTO reviewDTO);
 
-        Task<Review> UpdateReviewAsync(ReviewDTO reviewDTO);
+        Task<Review> UpdateReviewAsync(ReviewDTO reviewDTO, string reviewId);
 
         Task DeleteReviewAsync(string reviewId);
     }
