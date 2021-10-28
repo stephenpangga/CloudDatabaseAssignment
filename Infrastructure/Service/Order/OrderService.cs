@@ -23,15 +23,23 @@ namespace Infrastructure.Service
 
         public async Task<Order> AddOrderAsync(OrderDTO orderDTO)
         {
-            Order order = new Order();
-            order.OrderId = Guid.NewGuid();
-            order.ProductId = orderDTO.ProductId;
-            order.UserId = orderDTO.UserId;
-            order.OrderDate = DateTime.Now;
-            order.ShippingDate = null; // set to null, but can be updated when updateShipping endpoint is called.
-            order.PartitionKey = orderDTO.ProductId.ToString();
+            if(orderDTO.ProductId != Guid.Empty)
+            {
+                Order order = new Order();
+                order.OrderId = Guid.NewGuid();
+                order.ProductId = orderDTO.ProductId;
+                order.UserId = orderDTO.UserId;
+                order.OrderDate = DateTime.Now;
+                order.ShippingDate = null; // set to null, but can be updated when updateShipping endpoint is called.
+                order.PartitionKey = orderDTO.ProductId.ToString();
 
-            return await _orderWriteRepository.AddAsync(order);
+                return await _orderWriteRepository.AddAsync(order);
+            }
+            else
+            {
+                throw new Exception("Please enter a product ID");
+            }
+            
         }
         public async Task DeleteOrderAsync(string orderId)
         {

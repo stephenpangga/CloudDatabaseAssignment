@@ -7,11 +7,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HttpMultipartParser;
+using Azure.Storage.Blobs;
 
 namespace Infrastructure.Service
 {
     public class ProductService : IProductService
     {
+
+        private BlobServiceClient blobServiceClient;
+        private BlobContainerClient containerClient;
+        //private readonly BlobCredentialOptions _blobCredentialOptions;
+
         private readonly ICosmosReadRepository<Product> _productReadRepository;
         private readonly ICosmosWriteRepository<Product> _productWriteRepository;
 
@@ -83,9 +90,32 @@ namespace Infrastructure.Service
             return await _productWriteRepository.Update(updateProduct);
         }
 
-        /*public uploadProductImage(string ProductId)
+        public void UploadProductImage(string productId, FilePart file)
         {
+            //check how to get image from request
 
-        }*/
+            //upload the file 
+
+            //get the url from the blob client
+
+            //update product info wil image url
+
+
+            // Get a reference to a blob
+            BlobClient blobClient = containerClient.GetBlobClient(file.Name);
+
+            // Upload the file
+            //await blobClient.UploadAsync(file.Data, new BlobHttpHeaders { ContentType = file.ContentType });
+
+            //get the URL of the uploaded image
+            var blobUrl = blobClient.Uri.AbsoluteUri;
+
+            //var story = await GetStoryById(storyId);
+
+            //set the new url for the existing story
+            //story.ImageURL = blobUrl;
+
+            //await UpdateStory(story);
+        }
     }
 }

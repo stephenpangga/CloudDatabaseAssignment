@@ -23,12 +23,20 @@ namespace Infrastructure.Service
 
         public async Task<Review> AddReviewAsync(ReviewDTO reviewDTO)
         {
-            Review review = new Review();
-            review.ReviewId = Guid.NewGuid();
-            review.ProductId = reviewDTO.ProductId;
-            review.Comments = reviewDTO.Comments;
-            review.PartitionKey = reviewDTO.ProductId.ToString();
-            return await _reviewWriteRepository.AddAsync(review);
+            if (reviewDTO.ProductId != Guid.Empty)
+            {
+                Review review = new Review();
+                review.ReviewId = Guid.NewGuid();
+                review.ProductId = reviewDTO.ProductId;
+                review.Comments = reviewDTO.Comments;
+                review.PartitionKey = reviewDTO.ProductId.ToString();
+                return await _reviewWriteRepository.AddAsync(review);
+            }
+            else
+            {
+                throw new Exception("Please enter a product ID");
+            }
+            
         }
 
         public async Task DeleteReviewAsync(string reviewId)

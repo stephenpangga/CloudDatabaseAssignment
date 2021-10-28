@@ -72,5 +72,20 @@ namespace WidgetAndCoAPI
             await response.WriteStringAsync("Project deleted successfully!", Encoding.UTF8);
             return response;
         }
+
+        [Function("UploadImage")]
+        public async Task<HttpResponseData> UploadProductImage([HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "products/{ProductId}")] HttpRequestData req, string productId, FunctionContext executionContext)
+        {
+            //get image from request
+
+            HttpResponseData response = req.CreateResponse();
+            //upload image service layer
+
+
+            response.StatusCode = HttpStatusCode.Created;
+            await response.WriteStringAsync("Project deleted successfully!", Encoding.UTF8);
+            return response;
+        }
+
     }
 }

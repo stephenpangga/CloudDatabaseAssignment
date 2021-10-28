@@ -5,6 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.10.0" />
+    <PackageReference Include="HttpMultipartParser" Version="5.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Cosmos" Version="5.0.10" />
     <PackageReference Include="System.Linq.Queryable" Version="4.3.0" />
   </ItemGroup>
