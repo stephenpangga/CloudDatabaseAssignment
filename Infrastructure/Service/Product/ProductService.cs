@@ -39,7 +39,7 @@ namespace Infrastructure.Service
             product.ProductName = productDTO.ProductName;
             product.Price = productDTO.Price;
             product.ProductSpecification = productDTO.ProductSpecification;
-            product.ImageURL = productDTO.ImageURL;
+            product.ImageURLs = productDTO.ImageURLs;
             product.PartitionKey = productDTO.ProductName; //maybe change this to producttype
 
             return await _productWriteRepository.AddAsync(product);
@@ -82,7 +82,7 @@ namespace Infrastructure.Service
             updateProduct.ProductName = productDTO.ProductName;
             updateProduct.Price = productDTO.Price;
             updateProduct.ProductSpecification = productDTO.ProductSpecification;
-            updateProduct.ImageURL = productDTO.ImageURL;
+            updateProduct.ImageURLs = productDTO.ImageURLs;
             return await _productWriteRepository.Update(updateProduct);
         }
 
@@ -93,15 +93,6 @@ namespace Infrastructure.Service
 
         public async Task UploadProductImageAsync(string productId, FilePart file)
         {
-            //check how to get image from request
-
-            //upload the file 
-
-            //get the url from the blob client
-
-            //update product info wil image url
-
-
             // Get a reference to a blob
             BlobClient blobClient = containerClient.GetBlobClient(file.Name);
 
@@ -113,8 +104,8 @@ namespace Infrastructure.Service
 
             var product = await GetProductByIdAsync(productId);
 
-            //set the new url for the existing story
-            product.ImageURL = blobUrl;
+            //set the new url in the list of URLS
+            product.ImageURLs.Add(new ProductImage(blobUrl));
 
             await UpdateProduct(product);
         }

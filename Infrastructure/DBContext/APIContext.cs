@@ -47,6 +47,9 @@ namespace Infrastructure
                 .HasKey(p => p.ProductId);
 
             modelBuilder.Entity<Product>()
+                .OwnsMany(p => p.ImageURLs);
+
+            modelBuilder.Entity<Product>()
                 .HasNoDiscriminator()
                 .UseETagConcurrency()
                 .HasPartitionKey(p => p.PartitionKey);
