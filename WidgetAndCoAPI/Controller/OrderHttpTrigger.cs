@@ -33,6 +33,7 @@ namespace WidgetAndCoAPI
             await response.WriteAsJsonAsync(_orderService.GetAllOrdersAsync());
             return response;
         }
+
         [Function("GetByOrderId")]
         public async Task<HttpResponseData> GetAOrderById([HttpTrigger(AuthorizationLevel.Anonymous, "GET", Route = "orders/{OrderId}")] HttpRequestData req, string OrderId, FunctionContext executionContext)
         {
@@ -51,7 +52,6 @@ namespace WidgetAndCoAPI
             return response;
         }
 
-
         [Function("UpdateOrder")]
         public async Task<HttpResponseData> UpdateOrder([HttpTrigger(AuthorizationLevel.Anonymous, "Put", Route = "orders/{OrderId}")] HttpRequestData req, string orderId, FunctionContext executionContext)
         {
@@ -68,7 +68,7 @@ namespace WidgetAndCoAPI
             HttpResponseData response = req.CreateResponse();
             await _orderService.DeleteOrderAsync(orderId);
             response.StatusCode = HttpStatusCode.Accepted;
-            await response.WriteStringAsync("Project deleted successfully!", Encoding.UTF8);
+            await response.WriteStringAsync("Order has been deleted successfully!", Encoding.UTF8);
             return response;
         }
 

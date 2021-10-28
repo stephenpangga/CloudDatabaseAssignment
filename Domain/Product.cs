@@ -16,7 +16,7 @@ namespace Domain
 
         public string ProductSpecification { get; set; }
 
-        //this needs to accept multiple array.
+        //this needs to accept multiple array
         public string ImageURL { get; set; }
 
         public string PartitionKey { get; set; }

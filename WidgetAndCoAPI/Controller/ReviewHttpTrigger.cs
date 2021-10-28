@@ -69,7 +69,7 @@ namespace WidgetAndCoAPI
             HttpResponseData response = req.CreateResponse();
             await _reviewService.DeleteReviewAsync(reviewId);
             response.StatusCode = HttpStatusCode.Accepted;
-            await response.WriteStringAsync("Project deleted successfully!", Encoding.UTF8);
+            await response.WriteStringAsync("Review has been deleted successfully!", Encoding.UTF8);
             return response;
         }
     }

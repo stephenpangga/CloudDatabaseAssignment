@@ -61,14 +61,14 @@ namespace Infrastructure
                 
                 if(User == null)
                 {
-                    throw new Exception("The user you are looking for does not exist");
+                    throw new ArgumentNullException("The user you are looking for does not exist");
                 }
 
                 return User;
             }
             catch
             {
-                throw new Exception("Please provide a proper GUID for users");
+                throw new ArgumentNullException("Please provide a proper GUID for users");
             }
         }
 
@@ -80,7 +80,6 @@ namespace Infrastructure
             userInfo.LastName = userDTO.LastName;
             userInfo.Address = userDTO.Address;
             userInfo.Email = userDTO.Email;
-
             return await _userWriteRepository.Update(userInfo);
         }
     }

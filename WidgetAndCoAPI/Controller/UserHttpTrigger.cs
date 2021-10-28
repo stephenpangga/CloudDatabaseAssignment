@@ -46,7 +46,7 @@ namespace WidgetAndCoAPI
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             UserDTO userDTO = JsonConvert.DeserializeObject<UserDTO>(requestBody);
-            HttpResponseData response = req.CreateResponse(System.Net.HttpStatusCode.OK);
+            HttpResponseData response = req.CreateResponse(System.Net.HttpStatusCode.Created);
             await response.WriteAsJsonAsync(_userService.AddUserAsync(userDTO));
             return response;
         }
@@ -68,7 +68,7 @@ namespace WidgetAndCoAPI
             HttpResponseData response = req.CreateResponse();
             await _userService.DeleteUserAsync(userId);
             response.StatusCode = HttpStatusCode.Accepted;
-            await response.WriteStringAsync("Project deleted successfully!", Encoding.UTF8);
+            await response.WriteStringAsync("User has been deleted successfully!", Encoding.UTF8);
             return response;
         }
     }

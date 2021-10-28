@@ -12,9 +12,11 @@ namespace Domain
 
         public Guid ProductId { get; set; }
 
+        //user can be nullable as a review can be anonymous
+        public Guid? UserId { get; set; }
+
         public string Comments { get; set; }
 
-        //Nullable user id here 
 
         public string PartitionKey { get; set; }
 

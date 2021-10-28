@@ -70,22 +70,19 @@ namespace WidgetAndCoAPI
             HttpResponseData response = req.CreateResponse();
             await _productService.DeleteUserAsync(productId);
             response.StatusCode = HttpStatusCode.Accepted;
-            await response.WriteStringAsync("Project deleted successfully!", Encoding.UTF8);
+            await response.WriteStringAsync("Product has been deleted successfully!", Encoding.UTF8);
             return response;
         }
 
         [Function("UploadImage")]
         public async Task<HttpResponseData> UploadProductImage([HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "upload/{ProductId}")] HttpRequestData req, string productId, FunctionContext executionContext)
         {
-            //get image from request
-
             HttpResponseData response = req.CreateResponse();
-            //upload image service layer
             var parsedFormBody = MultipartFormDataParser.ParseAsync(req.Body);
-            var file = parsedFormBody.Result.Files[0];
-            await _productService.UploadProductImageAsync(productId, file);
+            var Imagefile = parsedFormBody.Result.Files[0];
+            await _productService.UploadProductImageAsync(productId, Imagefile);
             response.StatusCode = HttpStatusCode.Created;
-            await response.WriteStringAsync("Project Image has been uploaded successfully!", Encoding.UTF8);
+            await response.WriteStringAsync("Product Image has been uploaded successfully!", Encoding.UTF8);
             return response;
         }
 

@@ -12,6 +12,8 @@ namespace Domain
 
         public DateTime OrderDate { get; set; }
 
+        //initial creation of order has shipping null,
+        //once product is scanned for shipment, this datetime will be updated to the day of shipment.
         public DateTime? ShippingDate { get; set; }
 
         public string PartitionKey { get; set; }
