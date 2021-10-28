@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Domain;
 using Domain.DTO;
+using HttpMultipartParser;
 
 namespace Infrastructure.Service
 {
@@ -19,5 +20,7 @@ namespace Infrastructure.Service
         Task<Product> UpdateProductAsync(ProductDTO productDTO, string productId);
 
         Task DeleteUserAsync(string ProductId);
+
+        Task UploadProductImageAsync(string productId, FilePart file);
     }
 }

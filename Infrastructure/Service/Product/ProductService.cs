@@ -9,12 +9,12 @@ using System.Text;
 using System.Threading.Tasks;
 using HttpMultipartParser;
 using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 
 namespace Infrastructure.Service
 {
     public class ProductService : IProductService
     {
-
         private BlobServiceClient blobServiceClient;
         private BlobContainerClient containerClient;
         //private readonly BlobCredentialOptions _blobCredentialOptions;
@@ -26,6 +26,10 @@ namespace Infrastructure.Service
         {
             _productReadRepository = productReadRepository;
             _productWriteRepository = productWriteRepository;
+
+            blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=widgetandcostorage;AccountKey=/IO1mMYd3pWglFdngLbmoezfAqvh+F5MlSY7ZyB7XIKu+r09skOqTch3nrW/cs8GZ7PAKeIJRgFqwzEc8YBKDg==;EndpointSuffix=core.windows.net");
+            containerClient = blobServiceClient.GetBlobContainerClient("product-image");
+
     }
 
         public async Task<Product> AddProductAsync(ProductDTO productDTO)
@@ -90,7 +94,12 @@ namespace Infrastructure.Service
             return await _productWriteRepository.Update(updateProduct);
         }
 
-        public void UploadProductImage(string productId, FilePart file)
+        private async Task<Product>UpdateProduct(Product product)
+        {
+            return await _productWriteRepository.Update(product);
+        }
+
+        public async Task UploadProductImageAsync(string productId, FilePart file)
         {
             //check how to get image from request
 
@@ -105,17 +114,17 @@ namespace Infrastructure.Service
             BlobClient blobClient = containerClient.GetBlobClient(file.Name);
 
             // Upload the file
-            //await blobClient.UploadAsync(file.Data, new BlobHttpHeaders { ContentType = file.ContentType });
+            await blobClient.UploadAsync(file.Data, new BlobHttpHeaders { ContentType = file.ContentType });
 
             //get the URL of the uploaded image
             var blobUrl = blobClient.Uri.AbsoluteUri;
 
-            //var story = await GetStoryById(storyId);
+            var product = await GetProductByIdAsync(productId);
 
             //set the new url for the existing story
-            //story.ImageURL = blobUrl;
+            product.ImageURL = blobUrl;
 
-            //await UpdateStory(story);
+            await UpdateProduct(product);
         }
     }
 }

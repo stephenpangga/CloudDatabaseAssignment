@@ -12,6 +12,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Infrastructure.Service;
+using HttpMultipartParser;
 
 namespace WidgetAndCoAPI
 {
@@ -74,16 +75,17 @@ namespace WidgetAndCoAPI
         }
 
         [Function("UploadImage")]
-        public async Task<HttpResponseData> UploadProductImage([HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "products/{ProductId}")] HttpRequestData req, string productId, FunctionContext executionContext)
+        public async Task<HttpResponseData> UploadProductImage([HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "upload/{ProductId}")] HttpRequestData req, string productId, FunctionContext executionContext)
         {
             //get image from request
 
             HttpResponseData response = req.CreateResponse();
             //upload image service layer
-
-
+            var parsedFormBody = MultipartFormDataParser.ParseAsync(req.Body);
+            var file = parsedFormBody.Result.Files[0];
+            await _productService.UploadProductImageAsync(productId, file);
             response.StatusCode = HttpStatusCode.Created;
-            await response.WriteStringAsync("Project deleted successfully!", Encoding.UTF8);
+            await response.WriteStringAsync("Project Image has been uploaded successfully!", Encoding.UTF8);
             return response;
         }
 
