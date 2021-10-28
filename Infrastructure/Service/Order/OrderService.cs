@@ -61,21 +61,14 @@ namespace Infrastructure.Service
 
         public async Task<Order> GetOrderByIdAsync(string orderId)
         {
-            try
-            {
-                Guid id = Guid.Parse(orderId);
-                var order = await _orderReadRepository.GetAll().FirstOrDefaultAsync(o => o.OrderId == id);
+            Guid id = Guid.Parse(orderId);
+            var order = await _orderReadRepository.GetAll().FirstOrDefaultAsync(o => o.OrderId == id);
                 
-                if (order == null)
-                {
-                    throw new Exception("The order you are looking for does not exist");
-                }
-                return order;
-            }
-            catch
+            if (order == null)
             {
-                throw new Exception("Please provide a proper ID");
+                throw new Exception("The order you are looking for does not exist");
             }
+            return order;
         }
 
         public async Task<Order> UpdateOrderAsync(OrderDTO orderDTO, string orderId)

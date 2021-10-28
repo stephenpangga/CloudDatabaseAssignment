@@ -60,21 +60,14 @@ namespace Infrastructure.Service
 
         public async Task<Review> GetReviewByIdAsync(string reviewId)
         {
-            try
-            {
-                Guid id = Guid.Parse(reviewId);
-                var review = await _reviewReadRepository.GetAll().FirstOrDefaultAsync(r => r.ReviewId == id);
+            Guid id = Guid.Parse(reviewId);
+            var review = await _reviewReadRepository.GetAll().FirstOrDefaultAsync(r => r.ReviewId == id);
 
-                if(review == null)
-                {
-                    throw new Exception("The review you are looking for does not exist");
-                }
-                return review;
-            }
-            catch
+            if(review == null)
             {
-                throw new Exception("Please provide a proper ID");
+                throw new Exception("The review you are looking for does not exist");
             }
+            return review;
         }
 
         public async Task<Review> UpdateReviewAsync(ReviewDTO reviewDTO, string reviewId)

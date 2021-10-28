@@ -29,8 +29,17 @@ namespace WidgetAndCoAPI
         [Function("GetAllUsers")]
         public async Task<HttpResponseData> GetAllUsers([HttpTrigger(AuthorizationLevel.Anonymous, "GET", Route = "users")] HttpRequestData req, FunctionContext executionContext)
         {
-            HttpResponseData response = req.CreateResponse(System.Net.HttpStatusCode.OK);
-            await response.WriteAsJsonAsync(_userService.GetAllUsersAsync());
+            HttpResponseData response = req.CreateResponse();
+            try
+            {
+                await response.WriteAsJsonAsync(_userService.GetAllUsersAsync());
+                response.StatusCode = HttpStatusCode.OK;
+            }
+            catch (Exception e)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                await response.WriteStringAsync(e.Message, Encoding.UTF8);
+            }
             return response;
         }
         [Function("GetByUserId")]
@@ -55,10 +64,19 @@ namespace WidgetAndCoAPI
         [Function("UpdateUser")]
         public async Task<HttpResponseData> UpdateUser([HttpTrigger(AuthorizationLevel.Anonymous, "Put", Route = "users/{UserId}")] HttpRequestData req, string userId, FunctionContext executionContext)
         {
+            HttpResponseData response = req.CreateResponse();
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             UserDTO userDTO = JsonConvert.DeserializeObject<UserDTO>(requestBody);
-            HttpResponseData response = req.CreateResponse(HttpStatusCode.OK);
-            await response.WriteAsJsonAsync(await _userService.UpdateUserAsync(userDTO, userId));
+            try
+            {
+                await response.WriteAsJsonAsync(await _userService.UpdateUserAsync(userDTO, userId));
+                response.StatusCode = HttpStatusCode.OK;
+            }
+            catch (Exception e)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                await response.WriteStringAsync(e.Message, Encoding.UTF8);
+            }
             return response;
         }
 

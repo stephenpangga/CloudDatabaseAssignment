@@ -66,22 +66,14 @@ namespace Infrastructure.Service
 
         public async Task<Product> GetProductByIdAsync(string productId)
         {
-            try
-            {
-                Guid id = Guid.Parse(productId);
-                var product =  await _productReadRepository.GetAll().FirstOrDefaultAsync(p => p.ProductId == id);
+            Guid id = Guid.Parse(productId);
+            var product =  await _productReadRepository.GetAll().FirstOrDefaultAsync(p => p.ProductId == id);
 
-                if (product == null)
-                {
-                    throw new Exception("The product you are looking for does not exist");
-                }
-                return product;
-            }
-            catch
+            if (product == null)
             {
-                throw new Exception("Please provide a proper ID");
+                throw new Exception("The product you are looking for does not exist");
             }
-            
+            return product;
         }
 
         public async Task<Product> UpdateProductAsync(ProductDTO productDTO, string productId)

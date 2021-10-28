@@ -54,22 +54,14 @@ namespace Infrastructure
 
         public async Task<User> GetUserByIdAsync(string UserId)
         {
-            try
-            {
-                Guid id = Guid.Parse(UserId);
-                var User =  await _userReadRepository.GetAll().FirstOrDefaultAsync(u => u.UserId == id);
+            Guid id = Guid.Parse(UserId);
+            var User =  await _userReadRepository.GetAll().FirstOrDefaultAsync(u => u.UserId == id);
                 
-                if(User == null)
-                {
-                    throw new ArgumentNullException("The user you are looking for does not exist");
-                }
-
-                return User;
-            }
-            catch
+            if(User == null)
             {
-                throw new ArgumentNullException("Please provide a proper GUID for users");
+                throw new ArgumentNullException("The user you are looking for does not exist");
             }
+            return User;
         }
 
         public async Task<User> UpdateUserAsync(UserDTO userDTO, string userId)
