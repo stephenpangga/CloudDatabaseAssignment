@@ -45,18 +45,37 @@ namespace WidgetAndCoAPI
         [Function("GetByUserId")]
         public async Task<HttpResponseData> GetAUserById([HttpTrigger(AuthorizationLevel.Anonymous, "GET", Route = "users/{UserId}")] HttpRequestData req, string userId, FunctionContext executionContext)
         {
-            HttpResponseData response = req.CreateResponse(System.Net.HttpStatusCode.OK);
-            await response.WriteAsJsonAsync(_userService.GetUserByIdAsync(userId));
+            HttpResponseData response = req.CreateResponse();
+            try
+            {
+                await response.WriteAsJsonAsync(_userService.GetUserByIdAsync(userId));
+                response.StatusCode = HttpStatusCode.OK;
+            }
+            catch (Exception e)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                await response.WriteStringAsync(e.Message, Encoding.UTF8);
+            }
             return response;
         }
 
         [Function("AddUser")]
         public async Task<HttpResponseData> AddUser([HttpTrigger(AuthorizationLevel.Anonymous, "Post", Route = "users")] HttpRequestData req, FunctionContext executionContext)
         {
+            HttpResponseData response = req.CreateResponse();
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             UserDTO userDTO = JsonConvert.DeserializeObject<UserDTO>(requestBody);
-            HttpResponseData response = req.CreateResponse(System.Net.HttpStatusCode.Created);
-            await response.WriteAsJsonAsync(_userService.AddUserAsync(userDTO));
+
+            try
+            {
+                await response.WriteAsJsonAsync(_userService.AddUserAsync(userDTO));
+                response.StatusCode = HttpStatusCode.Created;
+            }
+            catch (Exception e)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                await response.WriteStringAsync(e.Message, Encoding.UTF8);
+            }
             return response;
         }
 
@@ -84,9 +103,17 @@ namespace WidgetAndCoAPI
         public async Task<HttpResponseData> DeleteUser([HttpTrigger(AuthorizationLevel.Anonymous, "Delete", Route = "users/{UserId}")] HttpRequestData req, string userId, FunctionContext executionContext)
         {
             HttpResponseData response = req.CreateResponse();
-            await _userService.DeleteUserAsync(userId);
-            response.StatusCode = HttpStatusCode.Accepted;
-            await response.WriteStringAsync("User has been deleted successfully!", Encoding.UTF8);
+            try
+            {
+                await _userService.DeleteUserAsync(userId);
+                response.StatusCode = HttpStatusCode.Accepted;
+                await response.WriteStringAsync("User has been deleted successfully!", Encoding.UTF8);
+            }
+            catch (Exception e)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                await response.WriteStringAsync(e.Message, Encoding.UTF8);
+            }
             return response;
         }
     }

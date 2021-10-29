@@ -26,29 +26,56 @@ namespace WidgetAndCoAPI
             this.Logger = Logger;
             _reviewService = reviewService;
         }
-
         [Function("GetAllReview")]
         public async Task<HttpResponseData> GetAllReview([HttpTrigger(AuthorizationLevel.Anonymous, "GET", Route = "reviews")] HttpRequestData req, FunctionContext executionContext)
         {
-            HttpResponseData response = req.CreateResponse(System.Net.HttpStatusCode.OK);
-            await response.WriteAsJsonAsync(_reviewService.GetAllReviewsAsync());
+            HttpResponseData response = req.CreateResponse();
+            try
+            {
+                await response.WriteAsJsonAsync(_reviewService.GetAllReviewsAsync());
+                response.StatusCode = HttpStatusCode.OK;
+            }
+            catch(Exception e)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                await response.WriteStringAsync(e.Message, Encoding.UTF8);
+            }
             return response;
         }
         [Function("GetByReviewId")]
         public async Task<HttpResponseData> GetByReviewId([HttpTrigger(AuthorizationLevel.Anonymous, "GET", Route = "reviews/{reviewId}")] HttpRequestData req, string reviewId, FunctionContext executionContext)
         {
-            HttpResponseData response = req.CreateResponse(System.Net.HttpStatusCode.OK);
-            await response.WriteAsJsonAsync(_reviewService.GetReviewByIdAsync(reviewId));
+            HttpResponseData response = req.CreateResponse();
+            try
+            {
+                await response.WriteAsJsonAsync(_reviewService.GetReviewByIdAsync(reviewId));
+
+                response.StatusCode = HttpStatusCode.OK;
+            }
+            catch (Exception e)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                await response.WriteStringAsync(e.Message, Encoding.UTF8);
+            }
             return response;
         }
 
         [Function("AddReview")]
         public async Task<HttpResponseData> AddReview([HttpTrigger(AuthorizationLevel.Anonymous, "Post", Route = "reviews")] HttpRequestData req, FunctionContext executionContext)
         {
+            HttpResponseData response = req.CreateResponse();
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             ReviewDTO reviewDTO = JsonConvert.DeserializeObject<ReviewDTO>(requestBody);
-            HttpResponseData response = req.CreateResponse(System.Net.HttpStatusCode.OK);
-            await response.WriteAsJsonAsync(_reviewService.AddReviewAsync(reviewDTO));
+            try
+            {
+                await response.WriteAsJsonAsync(_reviewService.AddReviewAsync(reviewDTO));
+                response.StatusCode = HttpStatusCode.Created;
+            }
+            catch (Exception e)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                await response.WriteStringAsync(e.Message, Encoding.UTF8);
+            }
             return response;
         }
 
@@ -56,10 +83,19 @@ namespace WidgetAndCoAPI
         [Function("UpdateReview")]
         public async Task<HttpResponseData> UpdateReview([HttpTrigger(AuthorizationLevel.Anonymous, "Put", Route = "reviews/{reviewId}")] HttpRequestData req, string reviewId, FunctionContext executionContext)
         {
+            HttpResponseData response = req.CreateResponse();
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             ReviewDTO reviewDTO = JsonConvert.DeserializeObject<ReviewDTO>(requestBody);
-            HttpResponseData response = req.CreateResponse(HttpStatusCode.OK);
-            await response.WriteAsJsonAsync(_reviewService.UpdateReviewAsync(reviewDTO, reviewId));
+            try
+            {
+                await response.WriteAsJsonAsync(_reviewService.UpdateReviewAsync(reviewDTO, reviewId));
+                response.StatusCode = HttpStatusCode.Accepted;
+            }
+            catch (Exception e)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                await response.WriteStringAsync(e.Message, Encoding.UTF8);
+            }
             return response;
         }
 
@@ -67,9 +103,17 @@ namespace WidgetAndCoAPI
         public async Task<HttpResponseData> DeleteReview([HttpTrigger(AuthorizationLevel.Anonymous, "Delete", Route = "reviews/{reviewId}")] HttpRequestData req, string reviewId, FunctionContext executionContext)
         {
             HttpResponseData response = req.CreateResponse();
-            await _reviewService.DeleteReviewAsync(reviewId);
-            response.StatusCode = HttpStatusCode.Accepted;
-            await response.WriteStringAsync("Review has been deleted successfully!", Encoding.UTF8);
+            try
+            {
+                await _reviewService.DeleteReviewAsync(reviewId);
+                response.StatusCode = HttpStatusCode.Accepted;
+                await response.WriteStringAsync("Review has been deleted successfully!", Encoding.UTF8);
+            }
+            catch (Exception e)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                await response.WriteStringAsync(e.Message, Encoding.UTF8);
+            }
             return response;
         }
     }
